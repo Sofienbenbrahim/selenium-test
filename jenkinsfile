@@ -53,12 +53,11 @@ pipeline {
                  script {
                      // Publish Allure reports
                      allure([includeProperties: false, jdk: '',
-               properties: [], reportBuildPolicy: 'ALWAYS',
-                             results: [[path: 'allure-results']]])
+                              properties: [], reportBuildPolicy: 'ALWAYS',
+                              results: [[path: 'allure-results']]])
 
                      // Optionally, archive the JSON report
-                     //archiveArtifacts
-'/var/lib/jenkins/workspace/python-selenium/result.json'
+                     //archiveArtifacts '/var/lib/jenkins/workspace/python-selenium/result.json'
                  }
              }
          }
