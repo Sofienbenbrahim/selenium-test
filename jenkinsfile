@@ -40,12 +40,10 @@ pipeline {
              steps {
                  script {
                      // Run your tests and generate Allure report
-                     //sh 'behave features --format
-allure_behave.formatter:AllureFormatter -o allure-results'
+                     //sh 'behave features --format allure_behave.formatter:AllureFormatter -o allure-results'
 
                      // Archive the report from the workspace
-                     archiveArtifacts artifacts: 'allure-results',
-allowEmptyArchive: true
+                     archiveArtifacts artifacts: 'allure-results', allowEmptyArchive: true
                  }
              }
          }
