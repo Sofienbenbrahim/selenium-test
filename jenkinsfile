@@ -1,9 +1,8 @@
-
 pipeline {
      agent any
 
      stages {
-          stage('Checkout') {
+         stage('Checkout') {
              steps {
                  checkout scm
              }
@@ -13,7 +12,6 @@ pipeline {
              steps {
                  script {
                      sh 'python3 -m venv venv'
-                     sh 'python3 ~/pythonfolder/get-pip.py'
                      sh '. ./venv/bin/activate'
                      sh 'pip install selenium'
                      sh 'pip install behave'
@@ -27,7 +25,27 @@ pipeline {
              steps {
                  script {
                      sh '. ./venv/bin/activate'
-                     sh '/var/lib/jenkins/.local/bin/behave features/login.feature --format allure_behave.formatter:AllureFormatter -o allure-results | allure generate allure-results  --clean '
+                     //sh 'behave features/login.feature --format allure_behave.formatter:AllureFormatter -o allure-results'
+                     //sh 'behave features/addEntreprise.feature --format allure_behave.formatter:AllureFormatter -o allure-results'
+                     //sh 'behave features/deleteEntreprise.feature --format allure_behave.formatter:AllureFormatter -o allure-results'
+                     //sh 'behave features/requiredFields-entreprise.feature --format allure_behave.formatter:AllureFormatter -o allure-results'
+                     sh 'behave features/required_dropdowns.feature --format allure_behave.formatter:AllureFormatter -o allure-results'
+
+
+                 }
+             }
+         }
+
+         stage('archive Artifacts') {
+             steps {
+                 script {
+                     // Run your tests and generate Allure report
+                     //sh 'behave features --format
+allure_behave.formatter:AllureFormatter -o allure-results'
+
+                     // Archive the report from the workspace
+                     archiveArtifacts artifacts: 'allure-results',
+allowEmptyArchive: true
                  }
              }
          }
@@ -35,13 +53,14 @@ pipeline {
          stage('Publish Reports') {
              steps {
                  script {
-                    //sh 'allure open allure-report -h localhost -p 8081'
-
-
                      // Publish Allure reports
-                    allure([includeProperties: false, jdk: '',
-                    properties: [], reportBuildPolicy: 'ALWAYS',
-                             results: [[path: 'allure-results']]]) 
+                     allure([includeProperties: false, jdk: '',
+               properties: [], reportBuildPolicy: 'ALWAYS',
+                             results: [[path: 'allure-results']]])
+
+                     // Optionally, archive the JSON report
+                     //archiveArtifacts
+'/var/lib/jenkins/workspace/python-selenium/result.json'
                  }
              }
          }
