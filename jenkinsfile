@@ -1,0 +1,49 @@
+
+pipeline {
+     agent any
+
+     stages {
+          stage('Checkout') {
+             steps {
+                 checkout scm
+             }
+         }
+
+         stage('Install Dependencies') {
+             steps {
+                 script {
+                     sh 'python3 -m venv venv'
+                     sh 'python3 ~/pythonfolder/get-pip.py'
+                     sh '. ./venv/bin/activate'
+                     sh 'pip install selenium'
+                     sh 'pip install behave'
+                     sh 'pip install allure-behave'
+                     sh 'pip install chromedriver'
+                 }
+             }
+         }
+
+         stage('Run Tests & Generate Allure Report') {
+             steps {
+                 script {
+                     sh '. ./venv/bin/activate'
+                     sh '/var/lib/jenkins/.local/bin/behave features/login.feature --format allure_behave.formatter:AllureFormatter -o allure-results | allure generate allure-results  --clean '
+                 }
+             }
+         }
+
+         stage('Publish Reports') {
+             steps {
+                 script {
+                    //sh 'allure open allure-report -h localhost -p 8081'
+
+
+                     // Publish Allure reports
+                    allure([includeProperties: false, jdk: '',
+                    properties: [], reportBuildPolicy: 'ALWAYS',
+                             results: [[path: 'allure-results']]]) 
+                 }
+             }
+         }
+     }
+}
