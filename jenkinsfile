@@ -27,15 +27,6 @@ pipeline {
              }
          }
 
-         stage('archive Artifacts') {
-             steps {
-                 script {
-                     // Archive the report from the workspace
-                    // archiveArtifacts artifacts: 'allure-results', allowEmptyArchive: true
-                 }
-             }
-         }
-
          stage('Publish Reports') {
              steps {
                  script {
@@ -48,6 +39,18 @@ pipeline {
                      //archiveArtifacts '/var/lib/jenkins/workspace/python-selenium/result.json'
                  }
              }
+         }
+     post {
+        always {
+            // Generate Allure report as HTML string
+            def allureReport = sh(script: 'allure generate allure-results -o allure-report --clean && cat allure-report/index.html', returnStdout: true).trim()
+
+            // Send email notification with Allure report
+            emailext body: "Your Jenkins pipeline has completed successfully.\n\n${allureReport}",
+                     subject: 'Jenkins Pipeline Notification with Allure Report',
+                     to: 'elyeslayes0@gmail.com',
+                     mimeType: 'text/html'
+        }
          }
      }
 }
