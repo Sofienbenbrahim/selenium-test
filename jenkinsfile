@@ -45,7 +45,7 @@ pipeline {
  post {
         always {
             // Generate Allure report as HTML string
-            def allureReport = sh(script: 'allure generate allure-results -o allure-report --clean && cat allure-report/index.html', returnStdout: true).trim()
+            def allureReport = sh(script: 'allure generate allure-results -o allure-report --clean && cat allure-report/index.html')
 
             // Send email notification with Allure report
             emailext body: "Your Jenkins pipeline has completed successfully.\n\n${allureReport}",
