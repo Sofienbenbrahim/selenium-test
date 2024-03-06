@@ -46,10 +46,13 @@ pipeline {
  post {
         always {
             // Send email notification with Allure report
-            emailext body: "Your Jenkins pipeline has completed successfully.\n\n http://localhost:8080/job/mail-project/allure/",
-                     subject: 'Jenkins Pipeline Notification with Allure Report',
-                     to: 'sofiene.benbrahim@proservices-training-company.com',
-                     mimeType: 'text/html'
-        }
+               emailext(
+                   subject: 'Build Notification',
+                   body: 'Your Jenkins pipeline has completed successfully.\n\n http://localhost:8080/job/mail-project/allure/',
+                   to: 'sofiene.benbrahim@proservices-training-company.com',
+                   cc: 'elyeslayes0@gmail.com',
+                   mimeType: 'text/html'
+               )
+             }
          }
 }
