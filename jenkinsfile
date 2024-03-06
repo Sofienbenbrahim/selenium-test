@@ -11,6 +11,7 @@ pipeline {
          stage('Install Dependencies') {
              steps {
                  script {
+                    sh 'python3 ~/pythonfolder/get-pip.py'
                      sh 'pip install selenium'
                      sh 'pip install behave'
                      sh 'pip install allure-behave'
