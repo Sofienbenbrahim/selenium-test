@@ -40,7 +40,9 @@ pipeline {
                  }
              }
          }
-     post {
+    
+     }
+ post {
         always {
             // Generate Allure report as HTML string
             def allureReport = sh(script: 'allure generate allure-results -o allure-report --clean && cat allure-report/index.html', returnStdout: true).trim()
@@ -52,5 +54,4 @@ pipeline {
                      mimeType: 'text/html'
         }
          }
-     }
 }
