@@ -44,11 +44,8 @@ pipeline {
      }
  post {
         always {
-            // Generate Allure report as HTML string
-               allureReport = sh 'allure generate allure-results -o allure-report --clean && cat allure-report/index.html'
-
             // Send email notification with Allure report
-            emailext body: "Your Jenkins pipeline has completed successfully.\n\n${allureReport}",
+            emailext body: "Your Jenkins pipeline has completed successfully.\n\n http://localhost:8080/job/mail-project/allure/",
                      subject: 'Jenkins Pipeline Notification with Allure Report',
                      to: 'elyeslayes0@gmail.com',
                      mimeType: 'text/html'
